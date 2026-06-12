@@ -26,30 +26,36 @@ const playCloseSound = () => {
 };
 
 
-function CountUp({ end, duration = 1500, suffix = "", startTrigger = false }) {
+function CountUp({ end, duration = 2000, suffix = "", startTrigger = false, delay = 800 }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!startTrigger) return;
 
-    let start = 0;
-    const endValue = parseInt(end, 10);
-    if (isNaN(endValue)) return;
+    let timer;
+    const startTimeout = setTimeout(() => {
+      let start = 0;
+      const endValue = parseInt(end, 10);
+      if (isNaN(endValue)) return;
 
-    const incrementTime = Math.max(Math.floor(duration / endValue), 10);
-    
-    const timer = setInterval(() => {
-      start += 1;
-      if (start >= endValue) {
-        setCount(endValue);
-        clearInterval(timer);
-      } else {
-        setCount(start);
-      }
-    }, incrementTime);
+      const incrementTime = Math.max(Math.floor(duration / endValue), 10);
+      
+      timer = setInterval(() => {
+        start += 1;
+        if (start >= endValue) {
+          setCount(endValue);
+          clearInterval(timer);
+        } else {
+          setCount(start);
+        }
+      }, incrementTime);
+    }, delay);
 
-    return () => clearInterval(timer);
-  }, [end, duration, startTrigger]);
+    return () => {
+      clearTimeout(startTimeout);
+      if (timer) clearInterval(timer);
+    };
+  }, [end, duration, startTrigger, delay]);
 
   return <>{count}{suffix}</>;
 }
