@@ -39,6 +39,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [shouldRender, setShouldRender] = useState(true);
   const [clickRipples, setClickRipples] = useState([]);
+  const [activeCardId, setActiveCardId] = useState(null);
   
   const formRef = useRef();
   const [isSending, setIsSending] = useState(false);
@@ -122,11 +123,17 @@ export default function App() {
       setTimeout(() => {
         setClickRipples((prev) => prev.filter((r) => r.id !== id));
       }, 600);
+      setActiveCardId(null);
     };
 
     window.addEventListener("click", handleClick);
     return () => window.removeEventListener("click", handleClick);
   }, []);
+
+  const handleCardClick = (e, cardId) => {
+    e.stopPropagation();
+    setActiveCardId((prev) => (prev === cardId ? null : cardId));
+  };
 
   return (
     <>
@@ -346,7 +353,12 @@ export default function App() {
             </h2>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-card p-8 transition-all hover:shadow-lg reveal reveal-zoom">
+            <div
+              className={`rounded-2xl border bg-card p-8 transition-all hover:shadow-lg reveal reveal-zoom cursor-pointer ${
+                activeCardId === "philosophy-0" ? "border-accent/40 shadow-lg" : "border-border"
+              }`}
+              onClick={(e) => handleCardClick(e, "philosophy-0")}
+            >
               <div className="mb-6 grid h-12 w-12 place-items-center rounded-xl bg-accent/10">
                 <BookOpen className="h-6 w-6 text-accent" />
               </div>
@@ -355,7 +367,12 @@ export default function App() {
                 Every student learns differently. I adapt materials and pace to each learner's curriculum, language, and confidence level — so the lesson fits the student, not the other way around.
               </p>
             </div>
-            <div className="rounded-2xl border border-border bg-card p-8 transition-all hover:shadow-lg reveal reveal-zoom reveal-delay-100">
+            <div
+              className={`rounded-2xl border bg-card p-8 transition-all hover:shadow-lg reveal reveal-zoom reveal-delay-100 cursor-pointer ${
+                activeCardId === "philosophy-1" ? "border-accent/40 shadow-lg" : "border-border"
+              }`}
+              onClick={(e) => handleCardClick(e, "philosophy-1")}
+            >
               <div className="mb-6 grid h-12 w-12 place-items-center rounded-xl bg-accent/10">
                 <Users className="h-6 w-6 text-accent" />
               </div>
@@ -364,7 +381,12 @@ export default function App() {
                 Progress happens when home and classroom align. I keep open, honest communication with parents — sharing feedback, goals, and clear next steps after every session.
               </p>
             </div>
-            <div className="rounded-2xl border border-border bg-card p-8 transition-all hover:shadow-lg reveal reveal-zoom reveal-delay-200">
+            <div
+              className={`rounded-2xl border bg-card p-8 transition-all hover:shadow-lg reveal reveal-zoom reveal-delay-200 cursor-pointer ${
+                activeCardId === "philosophy-2" ? "border-accent/40 shadow-lg" : "border-border"
+              }`}
+              onClick={(e) => handleCardClick(e, "philosophy-2")}
+            >
               <div className="mb-6 grid h-12 w-12 place-items-center rounded-xl bg-accent/10">
                 <Award className="h-6 w-6 text-accent" />
               </div>
@@ -427,20 +449,31 @@ export default function App() {
                 description: "Personalized online sessions on Zoom or Google Meet, with custom worksheets, weekly goals, and parent updates.",
                 students: "Flexible scheduling",
               },
-            ].map((course, index) => (
-              <div key={course.title} className={`group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:shadow-lg reveal reveal-zoom reveal-delay-${(index % 3) * 100}`}>
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground border border-border">
-                    {course.level}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{course.students}</span>
+            ].map((course, index) => {
+              const isActive = activeCardId === `course-${index}`;
+              return (
+                <div
+                  key={course.title}
+                  onClick={(e) => handleCardClick(e, `course-${index}`)}
+                  className={`group rounded-2xl border bg-card p-6 transition-all hover:border-accent/30 hover:shadow-lg reveal reveal-zoom cursor-pointer reveal-delay-${(index % 3) * 100} ${
+                    isActive ? "border-accent/40 shadow-lg" : "border-border"
+                  }`}
+                >
+                  <div className="mb-4 flex items-center justify-between">
+                    <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground border border-border">
+                      {course.level}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{course.students}</span>
+                  </div>
+                  <h3 className={`heading-md mb-2 text-lg text-foreground group-hover:text-accent transition-colors ${
+                    isActive ? "text-accent" : ""
+                  }`}>
+                    {course.title}
+                  </h3>
+                  <p className="body-sm">{course.description}</p>
                 </div>
-                <h3 className="heading-md mb-2 text-lg text-foreground group-hover:text-accent transition-colors">
-                  {course.title}
-                </h3>
-                <p className="body-sm">{course.description}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -486,18 +519,27 @@ export default function App() {
                 author: "Student",
                 name: "Moaz"
               },
-            ].map((t, index) => (
-              <div key={index} className={`rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-all reveal reveal-zoom reveal-delay-${(index % 3) * 100}`}>
-                <Quote className="mb-4 h-6 w-6 text-accent/40" />
-                <p className="mb-6 text-base leading-relaxed text-foreground italic">
-                  "{t.quote}"
-                </p>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{t.author}</p>
-                  <p className="body-sm">{t.name}</p>
+            ].map((t, index) => {
+              const isActive = activeCardId === `testimonial-${index}`;
+              return (
+                <div
+                  key={index}
+                  onClick={(e) => handleCardClick(e, `testimonial-${index}`)}
+                  className={`rounded-2xl border bg-card p-8 hover:shadow-lg transition-all reveal reveal-zoom cursor-pointer reveal-delay-${(index % 3) * 100} ${
+                    isActive ? "border-accent/40 shadow-lg" : "border-border"
+                  }`}
+                >
+                  <Quote className="mb-4 h-6 w-6 text-accent/40" />
+                  <p className="mb-6 text-base leading-relaxed text-foreground italic">
+                    "{t.quote}"
+                  </p>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{t.author}</p>
+                    <p className="body-sm">{t.name}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
