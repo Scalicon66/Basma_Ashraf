@@ -332,4 +332,25 @@
 /* On mobile both stagger from the image down — no extra override needed
    because .hero-img animates at 0s, text items stagger after */
 
+/* Click effect: small colored circle */
+.animate-click-circle {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  animation: click-circle-fade 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes click-circle-fade {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
+
 

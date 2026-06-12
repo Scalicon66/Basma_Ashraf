@@ -38,6 +38,7 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [shouldRender, setShouldRender] = useState(true);
+  const [clickRipples, setClickRipples] = useState([]);
   
   const formRef = useRef();
   const [isSending, setIsSending] = useState(false);
@@ -114,9 +115,33 @@ export default function App() {
     };
   }, [loading]);
 
+  useEffect(() => {
+    const handleClick = (e) => {
+      const id = Date.now() + Math.random().toString(36).substr(2, 9);
+      setClickRipples((prev) => [...prev, { id, x: e.clientX, y: e.clientY }]);
+      setTimeout(() => {
+        setClickRipples((prev) => prev.filter((r) => r.id !== id));
+      }, 600);
+    };
+
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
 
   return (
     <>
+      <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
+        {clickRipples.map((ripple) => (
+          <span
+            key={ripple.id}
+            className="absolute rounded-full bg-accent/80 animate-click-circle"
+            style={{
+              left: ripple.x,
+              top: ripple.y,
+            }}
+          />
+        ))}
+      </div>
       {shouldRender && (
         <div
           className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background transition-all duration-700 ease-in-out ${
