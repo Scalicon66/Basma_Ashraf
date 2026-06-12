@@ -151,10 +151,10 @@ export default function App() {
       createRipple(e.clientX, e.clientY);
       setActiveCardId(null);
 
-      // Play click sound if target is a button, link, or clickable card/element
+      // Play click sound if target is a button, link, or clickable card/element/input
       const target = e.target;
       if (target && typeof target.closest === "function") {
-        const clickable = target.closest("a, button, [role='button'], .cursor-pointer");
+        const clickable = target.closest("a, button, [role='button'], .cursor-pointer, input, textarea, select");
         if (clickable) {
           playClickSound();
         }
@@ -209,7 +209,7 @@ export default function App() {
       {/* Navigation */}
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 md:hidden cursor-pointer ${
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setMobileMenuOpen(false)}
