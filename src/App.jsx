@@ -128,13 +128,17 @@ export default function App() {
     });
   });
 
+  const createRipple = (x, y) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 9);
+    setClickRipples((prev) => [...prev, { id, x, y }]);
+    setTimeout(() => {
+      setClickRipples((prev) => prev.filter((r) => r.id !== id));
+    }, 600);
+  };
+
   useEffect(() => {
     const handleClick = (e) => {
-      const id = Date.now() + Math.random().toString(36).substr(2, 9);
-      setClickRipples((prev) => [...prev, { id, x: e.clientX, y: e.clientY }]);
-      setTimeout(() => {
-        setClickRipples((prev) => prev.filter((r) => r.id !== id));
-      }, 600);
+      createRipple(e.clientX, e.clientY);
       setActiveCardId(null);
     };
 
@@ -144,6 +148,7 @@ export default function App() {
 
   const handleCardClick = (e, cardId) => {
     e.stopPropagation();
+    createRipple(e.clientX, e.clientY);
     setActiveCardId((prev) => (prev === cardId ? null : cardId));
   };
 
