@@ -5,86 +5,6 @@ import emailjs from "@emailjs/browser";
 import heroMath from "./assets/hero-math.png";
 import aboutMath from "./assets/about-math.png";
 
-/* ─── Cursor / Click Effect ─────────────────────────────────────── */
-function CursorEffect() {
-  const dotRef  = useRef(null);
-  const ringRef = useRef(null);
-  const pos     = useRef({ x: -100, y: -100 });
-  const ring    = useRef({ x: -100, y: -100 });
-  const rafId   = useRef(null);
-
-  useEffect(() => {
-    // Only run cursor follower on pointer-fine (mouse) devices
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-
-    const move = (e) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-    };
-
-    // Smooth ring follows dot with lerp
-    const tick = () => {
-      if (dotRef.current && ringRef.current) {
-        ring.current.x += (pos.current.x - ring.current.x) * 0.13;
-        ring.current.y += (pos.current.y - ring.current.y) * 0.13;
-
-        dotRef.current.style.transform  = `translate(${pos.current.x}px, ${pos.current.y}px)`;
-        ringRef.current.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px)`;
-      }
-      rafId.current = requestAnimationFrame(tick);
-    };
-
-    if (!isTouch) {
-      window.addEventListener("mousemove", move);
-      rafId.current = requestAnimationFrame(tick);
-
-      // Expand ring on interactive elements
-      const grow = () => ringRef.current?.classList.add("cursor-grow");
-      const shrink = () => ringRef.current?.classList.remove("cursor-grow");
-      const targets = document.querySelectorAll("a, button, [role='button']");
-      targets.forEach(el => { el.addEventListener("mouseenter", grow); el.addEventListener("mouseleave", shrink); });
-
-      return () => {
-        window.removeEventListener("mousemove", move);
-        cancelAnimationFrame(rafId.current);
-        targets.forEach(el => { el.removeEventListener("mouseenter", grow); el.removeEventListener("mouseleave", shrink); });
-      };
-    }
-  }, []);
-
-  // Ripple on click (desktop) + tap (mobile)
-  useEffect(() => {
-    const spawnRipple = (x, y) => {
-      [0, 120, 260].forEach((delay, i) => {
-        const el = document.createElement("div");
-        el.className = "cursor-ripple";
-        el.style.cssText = `left:${x}px;top:${y}px;animation-delay:${delay}ms;--ripple-size:${44 + i * 22}px`;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 900 + delay);
-      });
-    };
-
-    const onClick = (e) => spawnRipple(e.clientX, e.clientY);
-    const onTouch = (e) => {
-      const t = e.touches[0];
-      spawnRipple(t.clientX, t.clientY);
-    };
-
-    window.addEventListener("click", onClick);
-    window.addEventListener("touchstart", onTouch, { passive: true });
-    return () => {
-      window.removeEventListener("click", onClick);
-      window.removeEventListener("touchstart", onTouch);
-    };
-  }, []);
-
-  return (
-    <>
-      {/* Desktop cursor elements — hidden on touch via CSS */}
-      <div ref={dotRef}  className="cursor-dot"  aria-hidden="true" />
-      <div ref={ringRef} className="cursor-ring" aria-hidden="true" />
-    </>
-  );
-}
 
 function CountUp({ end, duration = 1500, suffix = "", startTrigger = false }) {
   const [count, setCount] = useState(0);
@@ -197,7 +117,6 @@ export default function App() {
 
   return (
     <>
-      <CursorEffect />
       {shouldRender && (
         <div
           className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background transition-all duration-700 ease-in-out ${
