@@ -5,6 +5,16 @@ import emailjs from "@emailjs/browser";
 import heroMath from "./assets/hero-math.png";
 import aboutMath from "./assets/about-math.png";
 
+// Preload general click sound effect
+const clickSound = typeof Audio !== "undefined" ? new Audio("/sounds/click_general.mp3") : null;
+
+const playClickSound = () => {
+  if (!clickSound) return;
+  const sound = clickSound.cloneNode();
+  sound.volume = 0.4;
+  sound.play().catch(() => {});
+};
+
 
 function CountUp({ end, duration = 1500, suffix = "", startTrigger = false }) {
   const [count, setCount] = useState(0);
@@ -140,6 +150,15 @@ export default function App() {
     const handleClick = (e) => {
       createRipple(e.clientX, e.clientY);
       setActiveCardId(null);
+
+      // Play click sound if target is a button, link, or clickable card/element
+      const target = e.target;
+      if (target && typeof target.closest === "function") {
+        const clickable = target.closest("a, button, [role='button'], .cursor-pointer");
+        if (clickable) {
+          playClickSound();
+        }
+      }
     };
 
     window.addEventListener("click", handleClick);
@@ -149,6 +168,7 @@ export default function App() {
   const handleCardClick = (e, cardId) => {
     e.stopPropagation();
     createRipple(e.clientX, e.clientY);
+    playClickSound();
     setActiveCardId((prev) => (prev === cardId ? null : cardId));
   };
 
