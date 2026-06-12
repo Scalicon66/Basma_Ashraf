@@ -15,6 +15,16 @@ const playClickSound = () => {
   sound.play().catch(() => {});
 };
 
+// Preload close/X click sound effect
+const closeSound = typeof Audio !== "undefined" ? new Audio("/sounds/click_close.mp3") : null;
+
+const playCloseSound = () => {
+  if (!closeSound) return;
+  const sound = closeSound.cloneNode();
+  sound.volume = 0.4;
+  sound.play().catch(() => {});
+};
+
 
 function CountUp({ end, duration = 1500, suffix = "", startTrigger = false }) {
   const [count, setCount] = useState(0);
@@ -212,7 +222,10 @@ export default function App() {
         className={`fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 md:hidden cursor-pointer ${
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        onClick={() => setMobileMenuOpen(false)}
+        onClick={() => {
+          playCloseSound();
+          setMobileMenuOpen(false);
+        }}
       />
 
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
@@ -231,7 +244,14 @@ export default function App() {
           </div>
           <button
             className="md:hidden text-foreground cursor-pointer"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => {
+              if (mobileMenuOpen) {
+                playCloseSound();
+              } else {
+                playClickSound();
+              }
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
