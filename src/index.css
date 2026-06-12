@@ -279,3 +279,55 @@
 .reveal-delay-450 { transition-delay: 450ms; }
 .reveal-delay-500 { transition-delay: 500ms; }
 
+/* ─── Hero Entrance Animations ─────────────────────────────────── */
+
+@keyframes hero-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Applied once loading is done (hero-ready class on the section) */
+.hero-ready .hero-img {
+  animation: hero-slide-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-ready .hero-overline {
+  animation: hero-fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.hero-ready .hero-title {
+  animation: hero-fade-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
+.hero-ready .hero-body {
+  animation: hero-fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
+}
+
+.hero-ready .hero-buttons {
+  animation: hero-fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.56s both;
+}
+
+.hero-ready .hero-stats {
+  animation: hero-fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both;
+}
+
+/* Mobile: image comes first (order-1), text second (order-2) */
+/* On mobile both stagger from the image down — no extra override needed
+   because .hero-img animates at 0s, text items stagger after */

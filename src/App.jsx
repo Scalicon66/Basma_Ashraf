@@ -203,18 +203,37 @@ export default function App() {
       </nav>
 
       {/* Hero */}
-      <section className="section-padding">
+      <section className={`section-padding${!loading ? " hero-ready" : ""}`}>
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+
+            {/* Image — order-1 on mobile so it animates FIRST (top) */}
+            <div className="order-1 lg:order-2">
+              <div className="relative hero-img">
+                <img
+                  src={heroMath}
+                  alt="Abstract mathematical geometry art"
+                  width={960}
+                  height={540}
+                  className="rounded-2xl object-cover shadow-2xl w-full"
+                />
+                <div className="absolute -bottom-6 -left-6 hidden rounded-xl bg-card p-5 shadow-xl md:block border border-border">
+                  <p className="heading-md text-lg text-foreground">B.Sc. Mathematics</p>
+                  <p className="body-sm mt-1">Benha University, Egypt</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Text — order-2 on mobile so it appears BELOW the image */}
             <div className="order-2 lg:order-1">
-              <span className="label-overline text-accent mb-6 block">Mathematics Educator</span>
-              <h1 className="heading-xl mb-6 text-foreground">
+              <span className="hero-overline label-overline text-accent mb-6 block">Mathematics Educator</span>
+              <h1 className="hero-title heading-xl mb-6 text-foreground">
                 Basma <em className="text-accent font-serif">Ashraf</em>
               </h1>
-              <p className="body-lg mb-8 max-w-lg">
+              <p className="hero-body body-lg mb-8 max-w-lg">
                 Passionate mathematics teacher helping students across Egyptian, Saudi, British, and Emirati curricula build confidence — through patience, clarity, and real understanding.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="hero-buttons flex flex-wrap gap-4">
                 <a href="#courses" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg">
                   Explore Courses
                   <ArrowRight className="h-4 w-4" />
@@ -223,7 +242,7 @@ export default function App() {
                   About Me
                 </a>
               </div>
-              <div className="mt-10 flex gap-8">
+              <div className="hero-stats mt-10 flex gap-8">
                 <div>
                   <p className="heading-md text-3xl text-accent">
                     <CountUp end="4" suffix="+" startTrigger={!loading} />
@@ -244,24 +263,11 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="order-1 lg:order-2">
-              <div className="relative">
-                <img
-                  src={heroMath}
-                  alt="Abstract mathematical geometry art"
-                  width={960}
-                  height={540}
-                  className="rounded-2xl object-cover shadow-2xl"
-                />
-                <div className="absolute -bottom-6 -left-6 hidden rounded-xl bg-card p-5 shadow-xl md:block border border-border">
-                  <p className="heading-md text-lg text-foreground">B.Sc. Mathematics</p>
-                  <p className="body-sm mt-1">Benha University, Egypt</p>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </section>
+
 
       {/* About */}
       <section id="about" className="section-padding border-t border-border">
