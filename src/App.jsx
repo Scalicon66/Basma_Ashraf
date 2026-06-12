@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Mail, BookOpen, Award, Users, Menu, X, MapPin, ArrowRight, Quote } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
@@ -101,6 +101,7 @@ export default function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("active");
+            entry.target.setAttribute("data-revealed", "true");
             observer.unobserve(entry.target);
           }
         });
@@ -115,6 +116,17 @@ export default function App() {
       elements.forEach((el) => observer.unobserve(el));
     };
   }, [loading]);
+
+  // Restore the "active" class to already-revealed elements after any React re-render,
+  // preventing layout/opacity resets during state updates (e.g. click/taps)
+  useLayoutEffect(() => {
+    const revealedElements = document.querySelectorAll("[data-revealed='true']");
+    revealedElements.forEach((el) => {
+      if (!el.classList.contains("active")) {
+        el.classList.add("active");
+      }
+    });
+  });
 
   useEffect(() => {
     const handleClick = (e) => {
