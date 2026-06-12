@@ -480,31 +480,26 @@ export default function App() {
                 title: "Egyptian Curriculum",
                 level: "Primary – Secondary",
                 description: "Full support for the Egyptian national math syllabus, including thanaweya amma preparation, revisions, and exam techniques.",
-                students: "Arabic & English",
               },
               {
                 title: "Saudi Curriculum",
                 level: "Primary – Secondary",
                 description: "Aligned with the Saudi Ministry of Education math program — concepts, problem solving, and Qudurat-style practice.",
-                students: "Arabic medium",
               },
               {
                 title: "British – Oxford",
                 level: "Primary – IGCSE",
                 description: "Oxford International Maths series, with structured lessons, worksheets, and end-of-unit assessments in English.",
-                students: "English medium",
               },
               {
                 title: "British – Cambridge",
                 level: "Primary – IGCSE",
                 description: "Cambridge Lower Secondary & IGCSE Mathematics (0580), including past paper practice and exam strategy.",
-                students: "English medium",
               },
               {
                 title: "Emirati Curriculum",
                 level: "Primary – Secondary",
                 description: "UAE Ministry of Education math syllabus — concept building, homework support, and end-of-term revision.",
-                students: "Arabic & English",
               },
               {
                 title: "Private 1:1 Tutoring",
